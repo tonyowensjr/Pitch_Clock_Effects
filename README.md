@@ -1,2 +1,2 @@
 # Pitch_Clock_Effects
-This repo contains the code for my investigation into the impacts of the pitch clock
+With the entirety of the 2023 MLB season behind us, now seems like a perfect time to investigate the impacts of the pitch clock. Before the season, I hypothesized that the pitch clock would be most disruptive for older players, and players with more service time as they would have a harder time adapting to such a drastic change. In this project I will investigate how performance varied based on the pitch clock, and how that variance differs across different subsets of the population.
