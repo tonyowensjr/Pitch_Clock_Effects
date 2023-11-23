@@ -24,8 +24,46 @@ def prepare_timing(table_info: list) -> pd.DataFrame:
     # create the dataframe
     game_data = pd.DataFrame(stats,columns = TIMING_COLS)
     game_data.insert(0,'pitcher_name',names)
+    game_data.insert(1,'timing_name',game_data.pitcher_name.apply(lambda x:x.split(', ')[-1] +' ' + x.split(', ')[0]))
 
     return game_data
+
+def prepare_player_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean and prepare the player data dataframe
+
+    Args:
+        df (pd.DataFrame): The raw player data dataframe
+
+    Returns:
+        pd.DataFrame: The cleaned player data dataframe
+    """
+
+    # clean the name column by removing unwanted characters
+    df.Name = df.Name.apply(lambda x:x.replace('*','').replace('\xa0',' '))
+
+    return df
+
+def merge_player_data(df1: pd.DataFrame,year1:str,df2: pd.DataFrame,year2:str) -> pd.DataFrame:
+    """Merge the pitcher data from the given years and return the merged dataframe
+
+    Args:
+        df1 (pd.DataFrame): The pitcher data dataframe for the first year
+        df2 (pd.DataFrame): The pitcher data dataframe for the second year
+
+    Returns:
+        pd.DataFrame: The merged dataframe
+    """
+
+    # process both dataframes
+    df1,df2 = prepare_player_data(df1),prepare_player_data(df2)
+
+    # merge the dataframes
+    merged_data = df1.add_suffix(f'_{year1}').merge(df2.add_suffix(f'_{year2}'),
+                                                    left_on=f'Name-additional_{year1}',
+                                                    right_on=f'Name-additional_{year2}',how='inner')
+
+    # return the merged dataframe
+    return merged_data
 
 
 def timing_data() -> pd.DataFrame:
